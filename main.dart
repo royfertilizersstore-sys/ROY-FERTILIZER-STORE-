@@ -193,7 +193,7 @@ class _HomeState extends State<Home> {
   Future<void> manageStaff() async {
     final name=TextEditingController(),pass=TextEditingController();
     await showDialog(context:context,builder:(ctx)=>StatefulBuilder(builder:(ctx,sd)=>AlertDialog(title:const Text('Staff accounts'),content:SizedBox(width:360,child:Column(mainAxisSize:MainAxisSize.min,children:[
-      FutureBuilder<List<Map<String,Object?>>>(future:db.users(),builder:(c,s)=>ConstrainedBox(constraints:const BoxConstraints(maxHeight:180),child:ListView(shrinkWrap:true,children:(s.data??[]).where((u)=>u['role']=='Staff').map((u)=>SwitchListTile(title:Text('${u['username']}'),subtitle:Text((u['active'] as int)==1?'Active':'Disabled'),value:(u['active'] as int)==1,onChanged:(v)async{await db.setUserActive(u['id'] as int,v);sd((){});}).toList())))),const Divider(),TextField(controller:name,decoration:const InputDecoration(labelText:'New staff username')),TextField(controller:pass,obscureText:true,decoration:const InputDecoration(labelText:'Temporary password (10+ characters)')),
+      FutureBuilder<List<Map<String,Object?>>>(future:db.users(),builder:(c,s)=>ConstrainedBox(constraints:const BoxConstraints(maxHeight:180),child:ListView(shrinkWrap:true,children:(s.data??[]).where((u)=>u['role']=='Staff').map<Widget>((u)=>SwitchListTile(title:Text('${u['username']}'),subtitle:Text((u['active'] as int)==1?'Active':'Disabled'),value:(u['active'] as int)==1,onChanged:(v)async{await db.setUserActive(u['id'] as int,v);sd((){});}).toList())))),const Divider(),TextField(controller:name,decoration:const InputDecoration(labelText:'New staff username')),TextField(controller:pass,obscureText:true,decoration:const InputDecoration(labelText:'Temporary password (10+ characters)')),
     ])),actions:[TextButton(onPressed:()=>Navigator.pop(ctx),child:const Text('Close')),FilledButton(onPressed:()async{if(name.text.trim().length<3||pass.text.length<10){ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content:Text('Username must be 3+ characters and password 10+ characters.')));return;}try{await db.createUser(name.text,pass.text,'Staff');name.clear();pass.clear();sd((){});}catch(e){ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text('Could not add staff: $e')));}},child:const Text('Add staff'))]));
   }
 
@@ -205,7 +205,7 @@ class _HomeState extends State<Home> {
         Text('Smart Fertilizer Management',style:TextStyle(color:Colors.white,fontSize:20,fontWeight:FontWeight.bold)),
         Text('PARIMAL KUMAR ROY • KAIMARI, AGOMONI, DHUBRI',style:TextStyle(color:Colors.white70,fontSize:11)),
         Text('Offline-first shop management',style:TextStyle(color:Colors.white)),
-      ]),
+      ]),])),
       const SizedBox(height:14),
       Row(children:[Expanded(child:metric(t('Total stock','মুঠ ষ্টক'),'${total.toStringAsFixed(0)} bags',Icons.inventory)),const SizedBox(width:10),Expanded(child:metric(t('Products','সামগ্ৰী'),'${rows.length}',Icons.category))]),
       const SizedBox(height:16),Text(t('Stock overview','ষ্টকৰ বিৱৰণ'),style:const TextStyle(fontSize:18,fontWeight:FontWeight.bold)),
